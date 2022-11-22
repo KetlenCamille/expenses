@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'adaptative_text_field.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double, DateTime) onSubmit;
@@ -45,58 +46,65 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(children: <Widget>[
-          TextField(
-            controller: titleController,
-            decoration: InputDecoration(
-              labelText: 'Title',
-            ),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
           ),
-          TextField(
-            controller: valueController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            onSubmitted: (_) => _submitForm(),
-            decoration: InputDecoration(
-              labelText: 'Value (R\$)',
+          child: Column(children: <Widget>[
+            AdaptativeTextField(
+              controller: titleController,
+              label: 'Title',
             ),
-          ),
-          Container(
-            height: 70,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(_selectedDate == null
-                      ? 'No date selected!'
-                      : 'Date: ${DateFormat('dd/MM/y').format(_selectedDate!)}'),
-                ),
-                // ignore: prefer_const_constructors, deprecated_member_use
-                FlatButton(
-                  textColor: Theme.of(context).colorScheme.primary,
-                  onPressed: _showDataPicker,
-                  child: Text(
-                    'Select date',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+            AdaptativeTextField(
+              controller: valueController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (_) => _submitForm(),
+              label: 'Value (R\$)',
+            ),
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(_selectedDate == null
+                        ? 'No date selected!'
+                        : 'Date: ${DateFormat('dd/MM/y').format(_selectedDate!)}'),
                   ),
-                )
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              RaisedButton(
-                child: Text('New Transaction'),
-                color: Theme.of(context).colorScheme.primary,
-                textColor: Theme.of(context).textTheme.button?.color,
-                onPressed: _submitForm,
+                  // ignore: prefer_const_constructors, deprecated_member_use
+                  TextButton(
+                    child: const Text(
+                      'Select Date',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: _showDataPicker,
+                  ),
+                ],
               ),
-            ],
-          )
-        ]),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  child: Text(
+                    'New transaction',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.button?.color,
+                    ),
+                  ),
+                  onPressed: _submitForm,
+                ),
+              ],
+            )
+          ]),
+        ),
       ),
     );
   }
